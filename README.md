@@ -1,13 +1,17 @@
 # BYTE: Brecha en la Nube
 
-Shooter en primera persona de estilo retro que se ejecuta en el navegador. Todo está en un solo archivo (`index.html`), sin dependencias: gráficos, sonido y música se generan por código en tiempo real.
+Shooter en primera persona de estilo retro que se ejecuta en el navegador. No usa dependencias, imágenes ni audios externos: gráficos, sonido y música se generan por código en tiempo real. El código está organizado en módulos ES dentro de `js/`.
 
 Un virus ha tomado el data center más grande de la Nube. Tú eres **Byte**, un pequeño robot de mantenimiento, y debes purgar sector tras sector hasta llegar a cada jefe.
 
 ## Cómo jugar
 
 - **En línea:** si GitHub Pages está activado, abre `https://<tu-usuario>.github.io/byte-brecha-en-la-nube/`.
-- **En tu equipo:** descarga `index.html` y ábrelo con cualquier navegador moderno.
+- **En tu equipo:** los módulos ES no se cargan abriendo el archivo con doble clic (`file://`), así que hace falta un servidor local:
+  ```bash
+  npm start            # o: python3 -m http.server 8080
+  ```
+  y luego abre `http://localhost:8080`.
 
 Se recomienda jugar en PC con teclado y ratón.
 
@@ -38,6 +42,47 @@ Se recomienda jugar en PC con teclado y ratón.
 - **Botín y Mercado Negro**: mejoras, skins para Byte, skins para cada arma y suministros.
 - **Banda sonora sintetizada** que cambia según el escenario y la intensidad del combate.
 - **Progreso guardado** en el navegador (`localStorage`).
+
+## Estructura del código
+
+```
+index.html            Página: lienzo del juego y capa de menús
+css/style.css         Estilos de la página, menús y tienda
+js/
+  main.js             Punto de entrada y bucle principal
+  core/               Configuración, utilidades, estado compartido (store.js) y perfil guardado
+  data/               Definiciones de enemigos, jefes y armas
+  world/              Capítulos/escenarios y generador procedural de sectores
+  gfx/                Texturas y sprites generados por código
+  engine/             Raycasting, línea de visión y campo de flujo
+  game/               Lógica: jugador, IA, combate, objetos, partidas y actualización
+  render/             Render 3D, arma en primera persona y HUD
+  audio/              Efectos de sonido y banda sonora sintetizada
+  ui/                 Pantallas, Mercado Negro y controles
+tests/                Pruebas automáticas (Node, sin navegador)
+```
+
+El estado que cambia durante la partida (sector actual, enemigos, proyectiles, pantalla activa…) vive en el objeto `S` de `js/core/store.js`, porque un módulo ES no puede reasignar una variable importada de otro.
+
+### Dónde tocar para…
+
+| Quiero… | Archivo |
+|---|---|
+| Añadir o ajustar un arma | `js/data/weapons.js` (datos y modelo) y `js/render/weapon-view.js` (vista en primera persona) |
+| Añadir un enemigo | `js/data/enemies.js` (datos), `js/gfx/sprites.js` (dibujo) y `js/game/ai.js` (comportamiento especial) |
+| Añadir un jefe o un ataque de jefe | `BOSSES` en `js/data/enemies.js` y `bossAttack` en `js/game/ai.js` |
+| Añadir un capítulo o escenario | `CHAPTERS` en `js/world/chapters.js` |
+| Cambiar cómo se generan los mapas | `js/world/generator.js` |
+| Añadir un tema musical | `TRACKS` en `js/audio/music.js` |
+| Añadir mejoras o skins | `js/core/profile.js`, `js/data/weapons.js` y `js/ui/shop.js` |
+
+## Pruebas
+
+```bash
+npm test             # o: node --test tests/
+```
+
+Comprueban, entre otras cosas, que todos los sectores generados se pueden completar, la recarga, el límite de 4 armas, las compras de la tienda, que cada jefe recorre sus 3 fases y que la música cambia por capítulo. Requieren Node 22 o superior.
 
 ## Publicar en GitHub Pages
 

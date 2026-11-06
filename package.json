@@ -1,0 +1,11 @@
+{
+  "name": "byte-brecha-en-la-nube",
+  "version": "1.0.0",
+  "description": "Shooter retro en primera persona para el navegador, con sectores procedurales.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test": "node --test tests/"
+  }
+}
