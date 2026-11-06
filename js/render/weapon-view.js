@@ -29,7 +29,7 @@ function drawWeapon() {
   if (p.inspectT > 0) { drawInspect(w, P, t, bx, by); return; }
   const rl = p.reloadT > 0 ? 1 - p.reloadT / p.reloadDur : -1, dip = rl >= 0 ? Math.sin(ease(rl) * Math.PI) : 0;
   const flash = p.fireAnim > .65 && !w.melee;
-  const ox = RW / 2 + 24 + bx - dip * 14, oy = VH + by + p.fireAnim * 10 + p.raise * 90 + dip * 30, rot = -dip * .5;
+  const ox = RW / 2 + bx - dip * 14, oy = VH + by + p.fireAnim * 10 + p.raise * 90 + dip * 30, rot = -dip * .5;
   const [mx, my] = MUZZLE[w.id];
   S.muzzleXY = [ox + Math.cos(rot) * mx - Math.sin(rot) * my, oy + Math.sin(rot) * mx + Math.cos(rot) * my];
   ctx.save(); ctx.translate(ox, oy); ctx.rotate(rot);
@@ -38,9 +38,9 @@ function drawWeapon() {
   const glowA = (a, fn) => { ctx.globalAlpha = clamp(a, 0, 1); ctx.fillStyle = P.glow; ctx.strokeStyle = P.glow; ctx.shadowColor = P.glow; ctx.shadowBlur = 8; fn(); ctx.shadowBlur = 0; ctx.globalAlpha = 1; };
   switch (w.id) {
     case "wrench":
-      ctx.save(); ctx.translate(50, -10); ctx.rotate(-.45 - p.fireAnim * .9);
+      ctx.save(); ctx.translate(36, -10); ctx.rotate(-.45 - p.fireAnim * .9);
       pp(-6, -110, 12, 100, P.body); pp(-4, -108, 3, 96, P.accent); pp(-18, -132, 36, 24, P.dark); ctx.fillStyle = "#2b2d42"; ctx.fillRect(-6, -132, 12, 14);
-      ctx.restore(); robotHand(28, -28); break;
+      ctx.restore(); robotHand(14, -28); break;
     case "pistol": {
       if (flash) muzzle(0, -86, 26, P.glow);
       if (m.show) { pp(-9, -40 + mo, 18, 42, P.dark); glowA(1, () => ctx.fillRect(-6, -36 + mo, 12, 4)); ctx.fillStyle = S.SK.body; ctx.fillRect(-9, mo, 18, 4); }
@@ -124,7 +124,7 @@ function drawWeapon() {
 // Inspeccionar el arma: Byte la levanta y la gira para ver el modelo y su skin
 function drawInspect(w, P, t, bx, by) {
   const p = player, k = p.inspectT / INSPECT_T, e2 = Math.min(1, (1 - k) * 5, k * 5), ph = (1 - k) * Math.PI * 2;
-  const cx = RW / 2 + 20 + bx, cy = VH - 74 + by + (1 - e2) * 150;
+  const cx = RW / 2 + bx, cy = VH - 112 + by + (1 - e2) * 150;  // por encima de los paneles
   S.muzzleXY = [cx, cy];
   ctx.save(); ctx.translate(cx, cy); ctx.rotate(-.28 + Math.sin(ph) * .16);
   ctx.scale(2.2, 2.2 * (.78 + .22 * Math.cos(ph)));

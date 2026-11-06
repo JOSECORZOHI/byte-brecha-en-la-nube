@@ -113,8 +113,9 @@ function drawHUD() {
   glowText("BLINDAJE", lx + 88, ly + 31, 7, "#9aa6c8", "left", 0);
   segBar(lx + 88, ly + 34, 84, 5, p.armor / 100, "#6f9fff", 14, false);
 
-  const rx = RW - 206, ry = RH - 52;
-  panel(rx, ry, 200, 46, "#ffb703");
+  // El panel deja libre el centro (x 184–290) para que no tape la mano ni el arma
+  const rx = RW - 190, ry = RH - 52;
+  panel(rx, ry, 184, 46, "#ffb703");
   glowText(w.name, rx + 8, ry + 12, 7, "#ffb703", "left", 4);
   if (w.ammo) {
     const mag = p.mag[w.id] || 0, ms = magSize(w), res = p.ammo[w.ammo], low = mag <= Math.ceil(ms * .25);
@@ -122,19 +123,19 @@ function drawHUD() {
     glowText("/" + res, rx + 36, ry + 36, 9, "#9aa6c8", "left", 0);
     if (ms <= 12) for (let i = 0; i < ms; i++) { ctx.fillStyle = i < mag ? "#ffb703" : "rgba(255,183,3,.15)"; ctx.fillRect(rx + 8 + i * 6, ry + 40, 4, 3); }
     else { ctx.fillStyle = "rgba(63,193,255,.15)"; ctx.fillRect(rx + 8, ry + 40, 70, 3); ctx.fillStyle = "#3fc1ff"; ctx.fillRect(rx + 8, ry + 40, 70 * mag / ms, 3); }
-    if (p.reloadT <= 0 && low && canReload(w) && Math.sin(t * 8) > 0) glowText("[R] RECARGAR", rx + 84, ry + 22, 7, "#ffd60a", "left", 5);
-    else if (mag === 0 && !canReload(w)) glowText("SIN MUNICIÓN", rx + 84, ry + 22, 7, "#ff2e55", "left", 5);
-  } else { glowText("∞", rx + 8, ry + 36, 20, "#ffffff", "left", 8); glowText("CUERPO A CUERPO", rx + 26, ry + 34, 7, "#9aa6c8", "left", 0); }
+    if (p.reloadT <= 0 && low && canReload(w) && Math.sin(t * 8) > 0) glowText("[R] RECARGAR", rx + 80, ry + 22, 7, "#ffd60a", "left", 5);
+    else if (mag === 0 && !canReload(w)) glowText("SIN MUNICIÓN", rx + 80, ry + 22, 7, "#ff2e55", "left", 5);
+  } else { glowText("∞", rx + 8, ry + 34, 18, "#ffffff", "left", 8); glowText("CUERPO A CUERPO", rx + 8, ry + 43, 6, "#9aa6c8", "left", 0); }
   for (let i = 0; i < MAX_SLOTS; i++) {
-    const id = p.slots[i], bx = rx + 84 + i * 28, by = ry + 26, cur = id && id === p.weapon;
-    ctx.fillStyle = cur ? "rgba(255,183,3,.22)" : "rgba(255,255,255,.04)"; ctx.fillRect(bx, by, 26, 15);
+    const id = p.slots[i], bx = rx + 80 + i * 24, by = ry + 26, cur = id && id === p.weapon;
+    ctx.fillStyle = cur ? "rgba(255,183,3,.22)" : "rgba(255,255,255,.04)"; ctx.fillRect(bx, by, 22, 15);
     ctx.strokeStyle = cur ? "#ffb703" : id ? (S.profile.shopW.includes(id) ? "#ff2e88" : "rgba(232,236,248,.45)") : "rgba(255,255,255,.1)";
     if (cur) { ctx.shadowColor = "#ffb703"; ctx.shadowBlur = 6; }
-    ctx.strokeRect(bx + .5, by + .5, 25, 14); ctx.shadowBlur = 0;
-    if (id) ctx.drawImage(modelCanvas(id), bx + 2, by + 4, 22, 8.25);
+    ctx.strokeRect(bx + .5, by + .5, 21, 14); ctx.shadowBlur = 0;
+    if (id) ctx.drawImage(modelCanvas(id), bx + 1, by + 4, 20, 7.5);
     glowText(String(i + 1), bx + 2, by + 6, 6, cur ? "#ffb703" : "#9aa6c8", "left", 0);
   }
-  for (const [k, col, xx] of [["r", "#ff3b3b", rx + 172], ["u", "#3f7fff", rx + 186]]) {
+  for (const [k, col, xx] of [["r", "#ff3b3b", rx + 156], ["u", "#3f7fff", rx + 170]]) {
     ctx.fillStyle = p.keys[k] ? col : "rgba(255,255,255,.06)"; if (p.keys[k]) { ctx.shadowColor = col; ctx.shadowBlur = 8; }
     ctx.fillRect(xx, ry - 18, 10, 14); ctx.shadowBlur = 0;
     if (p.keys[k]) { ctx.fillStyle = "#fff"; ctx.fillRect(xx + 2, ry - 16, 4, 2); }
